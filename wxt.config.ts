@@ -6,6 +6,15 @@ export default defineConfig({
   extensionApi: 'chrome',
   modules: ['@wxt-dev/module-react'],
   manifest: {
-    permissions: ['storage', 'tabs', 'alarms']
+    permissions: ['storage', 'tabs', 'alarms'],
+    content_security_policy: {
+      extension_pages: "script-src 'self' 'wasm-unsafe-eval' http://localhost:3000; object-src 'self';"
+    },
+    web_accessible_resources: [
+      {
+        resources: ['lib/*'],
+        matches: ['<all_urls>']
+      }
+    ]
   }
 });

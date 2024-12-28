@@ -1,17 +1,12 @@
 
-import { useState, useEffect, useMemo, useCallback } from "react"
+import { useState, useEffect, useMemo, useCallback, useContext } from "react"
 
 import {
-  Column,
-  Table,
   ColumnDef,
   useReactTable,
   getCoreRowModel,
   getFilteredRowModel,
-  getPaginationRowModel,
   flexRender,
-  RowData,
-  createColumnHelper,
   ColumnFiltersState,
 } from "@tanstack/react-table"
 
@@ -45,65 +40,67 @@ import {
   TableRow,
 } from "@/components/ui/table"
 
-import logo from "/logo.png"
-import { Input } from "@/components/ui/input"
-import { Action, Actions, Rule, RulesDemoData } from "@/lib/types"
+import { DebouncedInput, Input } from "@/components/ui/input"
+import { Action, Actions, Rule, DefaultRules, v_rule_pattern, ValidateRule, ValidateRules, ValidationResult } from "@/lib/rule"
 import { Checkbox, SmallCheckbox } from "@/components/ui/checkbox"
 import {
-  CircleX,
-  X,
-  SquareX,
-  CopyPlus,
-  Copy,
   Plus,
-  Eclipse,
   Ellipsis,
-  Save,
 } from "lucide-react"
 import { Switch } from "@/components/ui/switch"
 import { cn } from "@/lib/utils"
 
 import { storage } from "wxt/storage"
 import { STORAGE_KEY_RULES } from "@/lib/storage"
-import { v_rule_regex, ValidateRule, ValidationResult } from "@/lib/validation"
+import { AppStateContext } from "./providers"
+import { browser } from "wxt/browser"
 
 
-const DRAFT_RULE: Rule = {
-  regex: "*://*.google.com/*",
-  inactive_minutes: 3,
-  action: "discard",
-  dirty: true,
+interface TabListItem {
+  favicon_url: string;
+  title: string;
+  url: string;
 }
 
-//
+
+function makeDraftRule(url: string): Rule {
+  let pattern = '';
+  const url_ = URL.parse(url)
+  if (url_) {
+    pattern = `${url_.origin}/*`
+  }
+
+  return {
+    url_pattern: pattern,
+    inactive_minutes: 3,
+    action: "discard",
+    to_stash: true,
+    disabled: false,
+    dirty: true,
+  }
+}
+
+
 // TODO:
 // - fields validation ✅
 // - duplicate ✅
 // - batch operations ✅
 // - inactive, action edit ✅
-// - new column: add_to_inbox ✅
+// - new column: add_to_stash ✅
 // - adjust ordering ✅
 export default function RulesTable() {
-  const [data, _setData] = useState<Rule[]>([])
+
+  const { rules: data, setRules: _setData } = useContext(AppStateContext)
   const [dataDirty, setDataDirty] = useState(false)
+  const [vResult, setVResult] = useState<ValidationResult>({ ok: true })
 
-  useEffect(() => {
-    ; (async () => {
-      const rules = await storage.getItem<Rule[]>(STORAGE_KEY_RULES)
-      console.log(rules)
-      _setData(rules ?? [])
-    })()
-  }, [])
-
-  function newRule() {
-    _setData([DRAFT_RULE, ...data])
+  function newRule(url: string) {
+    _setData([makeDraftRule(url), ...data])
     setDataDirty(true)
     setRowSelection({})
   }
 
   function updateData(rowIndex: number, updates: Partial<Rule>) {
-    console.log(rowIndex, updates)
-    console.log("data:", data)
     const newData = data.map((val, index) => {
       if (index === rowIndex) {
         return { ...data[rowIndex], ...updates, dirty: true }
@@ -111,7 +108,6 @@ export default function RulesTable() {
         return val
       }
     })
-    console.log("newData:", newData)
     _setData(newData)
     setDataDirty(true)
   }
@@ -135,6 +131,8 @@ export default function RulesTable() {
     const copy: Rule[] = [...data]
       ;[copy[index - 1], copy[index]] = [copy[index], copy[index - 1]]
     _setData(copy)
+    setDataDirty(true)
+    setRowSelection({})
   }
 
   function moveDown(index: number) {
@@ -142,9 +140,15 @@ export default function RulesTable() {
     const copy: Rule[] = [...data]
       ;[copy[index + 1], copy[index]] = [copy[index], copy[index + 1]]
     _setData(copy)
+    setDataDirty(true)
+    setRowSelection({})
   }
 
   function saveData() {
+    if (!vResult.ok) {
+      return
+    }
+
     const newData = data.map((val) => {
       return { ...val, dirty: undefined }
     })
@@ -152,6 +156,12 @@ export default function RulesTable() {
     _setData(newData)
     setDataDirty(false)
   }
+
+  useEffect(() => {
+    const res = ValidateRules(data)
+    setVResult(res)
+  }, [data, dataDirty])
+
 
   const columns = useMemo(() => {
     const columns: ColumnDef<Rule>[] = [
@@ -183,14 +193,14 @@ export default function RulesTable() {
       },
       {
         id: "index",
-        header: "#",
+        header: "No.",
         cell: ({ row }) => {
           return row.index + 1
         },
       },
       {
-        accessorKey: "regex",
-        header: "URL Regex",
+        accessorKey: "url_pattern",
+        header: "URL Pattern",
         cell: ({ getValue, row }) => {
           const initialValue: string = getValue() as string
           const [value, setValue] = useState(initialValue)
@@ -206,7 +216,7 @@ export default function RulesTable() {
               return
             }
 
-            const res = v_rule_regex(value)
+            const res = v_rule_pattern(value)
             if (!res.ok) {
               setValid(false)
               return
@@ -216,17 +226,17 @@ export default function RulesTable() {
           }, [value])
 
           return (
-            <div className="w-48 font-mono text-xs">
+            <div className="w-60 font-mono text-xs">
               <Input
                 value={value}
                 className={cn(
-                  "h-7 text-sm rounded-[4px] py-0 px-2 border-none focus-visible:ring-offset-2 focus-visible:ring-1 focus-visible:ring-zinc-300",
+                  "h-7 text-sm rounded-[4px] py-0 px-2 border-none focus-visible:ring-offset-2 focus-visible:ring-1 focus-visible:ring-zinc-300 dark:focus-visible:ring-zinc-600",
                   valid ? "" : "focus-visible:ring-red-500"
                 )}
                 onChange={(e) => setValue(e.target.value)}
                 onBlur={() => {
                   if (value !== initialValue) {
-                    updateData(row.index, { regex: value })
+                    updateData(row.index, { url_pattern: value })
                   }
                 }}
               />
@@ -307,7 +317,7 @@ export default function RulesTable() {
               }}
             >
               <SelectTrigger
-                className="h-7 w-[74px] justify-start relative -left-2 px-2 border-none focus:ring-0 focus:ring-offset-0 rounded-[4px]"
+                className="h-7 w-[74px] justify-start relative -left-2 px-2 border-none focus:ring-0 focus:ring-offset-0 rounded-[4px] bg-transparent"
                 noIcon={true}
               >
                 <SelectValue placeholder="" />
@@ -316,8 +326,8 @@ export default function RulesTable() {
                 {Object.values(Actions).map((action) => {
                   const className = {
                     nop: "bg-gray-100 text-gray-700",
-                    discard: "bg-yellow-100 text-yellow-700",
-                    close: "bg-red-100 text-red-700",
+                    discard: "bg-green-100 text-green-700",
+                    close: "bg-blue-100 text-blue-700",
                   }[action.action]
 
                   return (
@@ -343,8 +353,8 @@ export default function RulesTable() {
         },
       },
       {
-        accessorKey: "to_inbox",
-        header: "→Inbox",
+        accessorKey: "to_stash",
+        header: "→Stash",
         cell: ({ getValue, row: { index }, column: { id }, table }) => {
           const initialValue: boolean = getValue() ? true : false
           const [value, setValue] = useState<boolean>(initialValue)
@@ -354,7 +364,7 @@ export default function RulesTable() {
 
           function onChange(value: boolean) {
             setValue(value)
-            updateData(index, { to_inbox: value })
+            updateData(index, { to_stash: value })
           }
           return (
             <Switch
@@ -367,9 +377,9 @@ export default function RulesTable() {
       },
       {
         accessorKey: "disabled",
-        header: "Enable",
+        header: "Disabled",
         cell: ({ getValue, row: { index }, column: { id }, table }) => {
-          const initialValue: boolean = !(getValue() as boolean)
+          const initialValue: boolean = getValue() as boolean
           const [value, setValue] = useState(initialValue)
           useEffect(() => {
             setValue(initialValue)
@@ -377,8 +387,7 @@ export default function RulesTable() {
 
           function onChange(value: boolean) {
             setValue(value)
-            // table.options.meta?.updateData(index, id, value)
-            updateData(index, { disabled: !value })
+            updateData(index, { disabled: value })
           }
 
           return (
@@ -397,22 +406,6 @@ export default function RulesTable() {
           const rule = row.original
           return (
             <div className="flex gap-0">
-              {/* <Button */}
-              {/*   variant="ghost" */}
-              {/*   className="h-7 w-7 p-2 rounded-[8px] hover:bg-zinc-200" */}
-              {/*   onClick={() => duplicateRule(row.index)} */}
-              {/*   title="Duplicate" */}
-              {/* > */}
-              {/*   <Copy /> */}
-              {/* </Button> */}
-              {/* <Button */}
-              {/*   variant="ghost" */}
-              {/*   className="h-7 w-7 p-2 rounded-[8px] text-red-500 hover:text-red-500 hover:bg-red-100" */}
-              {/*   onClick={() => deleteRules(row.index)} */}
-              {/*   title="Delete" */}
-              {/* > */}
-              {/*   <CircleX /> */}
-              {/* </Button> */}
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
                   <Button
@@ -428,7 +421,6 @@ export default function RulesTable() {
                   <DropdownMenuItem
                     onClick={() => {
                       duplicateRule(row.index)
-                      setRowSelection({})
                     }}
                   >
                     Duplicate
@@ -436,9 +428,8 @@ export default function RulesTable() {
                   <DropdownMenuItem
                     onClick={() => {
                       deleteRules(row.index)
-                      setRowSelection({})
                     }}
-                    className="focus:text-destructive focus:bg-red-100"
+                    className="focus:text-destructive focus:bg-red-100 dark:focus:bg-red-600 dark:text-white"
                   >
                     Delete
                   </DropdownMenuItem>
@@ -447,7 +438,6 @@ export default function RulesTable() {
                     disabled={row.index < 1}
                     onClick={() => {
                       moveUp(row.index)
-                      setRowSelection({})
                     }}
                   >
                     Move up
@@ -456,7 +446,6 @@ export default function RulesTable() {
                     disabled={row.index >= data.length - 1}
                     onClick={() => {
                       moveDown(row.index)
-                      setRowSelection({})
                     }}
                   >
                     Move down
@@ -492,51 +481,111 @@ export default function RulesTable() {
     table.getIsSomeRowsSelected() || table.getIsAllRowsSelected()
   )
 
-  const regexColumn = table.getColumn("regex")
+  const regexColumn = table.getColumn("url_pattern")
+
+
+  const [tabList, setTabList] = useState<TabListItem[]>([])
+
+  async function refreshTabList() {
+    console.log('refreshTabList')
+    const tabs = await browser.tabs.query({})
+    setTabList(tabs.filter(t => t.url && t.favIconUrl && t.title).map((t): TabListItem => {
+      return {
+        favicon_url: t.favIconUrl!,
+        url: t.url!,
+        title: t.title!,
+      }
+    }))
+  }
+
 
   return (
-    <div className="w-full gap-2 min-h-64">
-      <div className="flex items-center justify-between w-full mb-2">
+    <div className="w-full flex flex-col min-h-64">
+      <div className="flex items-center justify-end gap-2 w-full mb-2 relative left-28 pr-28">
+        {dataDirty && (
+          <div className="flex items-baseline gap-2">
+            <span className="pb-0 text-red-500">{vResult.ok ? 'Rules changed' : vResult.reason}</span>
+            <Button
+              size="sm"
+              className="h-8"
+              title="Save Ruels"
+              onClick={saveData}
+            >
+              Save
+            </Button>
+          </div>
+        )}
         <DebouncedInput
           placeholder="Search Rules"
-          className="h-8 w-72 rounded-[0px] focus-visible:ring-0 focus-visible:ring-offset-0 text-sm font-mono"
+          className="h-8 w-56 rounded-[0px] focus-visible:ring-0 focus-visible:ring-offset-0 text-sm font-mono"
           value={(regexColumn?.getFilterValue() as string) ?? ""}
           onChange={(value) => {
             regexColumn?.setFilterValue(value)
           }}
         />
         <div className="flex items-center gap-2">
-          {dataDirty && (
-            <div className="flex items-end gap-2">
-              <span className="pb-0 text-red-500">{"Rules changed"}</span>
+
+          <DropdownMenu
+            onOpenChange={(open) => {
+              if (open) {
+                refreshTabList()
+              }
+            }}
+          >
+            <DropdownMenuTrigger asChild>
               <Button
                 variant="outline"
                 size="icon"
-                className="h-8 w-8 rounded-[6px] mr-4"
-                title="Save Ruels"
-                onClick={saveData}
+                className="h-8 w-8 "
+                title="New Rule"
+                onClick={refreshTabList}
               >
-                <Save />
+                <Plus />
               </Button>
-            </div>
-          )}
+            </DropdownMenuTrigger>
+            <DropdownMenuContent
+              side="bottom"
+              align="end"
 
-          <Button
-            variant="outline"
-            size="icon"
-            className="h-8 w-8 rounded-[6px]"
-            title="New Rule"
-            onClick={newRule}
-          >
-            <Plus />
-          </Button>
+            >
+              <DropdownMenuItem
+                onClick={() => { newRule('') }}
+              >
+                New blank rule
+              </DropdownMenuItem>
+
+              {
+                tabList.length > 0 && <>
+                  <DropdownMenuSeparator />
+                  <DropdownMenuLabel>from tabs</DropdownMenuLabel>
+                  <div className="max-h-[200px] overflow-y-scroll">
+                    {
+                      tabList.map(t => {
+                        const url = URL.parse(t.url);
+                        return <DropdownMenuItem
+                          key={t.url}
+                          onClick={() => {
+                            newRule(t.url)
+                          }}
+                        >
+                          <img src={t.favicon_url} className="h-4 w-4" />
+                          <span className="max-w-48 overflow-hidden text-nowrap text-ellipsis">{t.title}</span>
+                          <span className="text-gray-500">{url?.host}</span>
+                        </DropdownMenuItem>
+                      })
+                    }
+                  </div>
+                </>
+              }
+            </DropdownMenuContent>
+          </DropdownMenu>
 
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
               <Button
                 variant="outline"
                 size="icon"
-                className="h-8 w-8 rounded-[6px]"
+                className="h-8 w-8 "
                 title="Batch Operations"
               >
                 <Ellipsis />
@@ -551,7 +600,7 @@ export default function RulesTable() {
                   )
                   setRowSelection({})
                 }}
-                className="focus:text-destructive focus:bg-red-100"
+                className="focus:text-destructive focus:bg-red-100 dark:focus:bg-red-600 dark:text-white"
               >
                 Delete
               </DropdownMenuItem>
@@ -559,9 +608,9 @@ export default function RulesTable() {
           </DropdownMenu>
         </div>
       </div>
-      <div className="relative overflow-auto border max-h-72">
+      <div className="relative overflow-auto border h-[302px] max-h-[302px]">
         <TableDiv className="">
-          <TableHeader className="sticky top-0 bg-secondary ">
+          <TableHeader className="sticky top-0 bg-secondary z-10">
             {table.getHeaderGroups().map((headerGroup) => (
               <TableRow key={headerGroup.id} className="">
                 {headerGroup.headers.map((header) => {
@@ -570,7 +619,7 @@ export default function RulesTable() {
                       key={header.id}
                       className={cn(
                         "h-10 pr-0",
-                        ["to_inbox", "disabled"].includes(header.column.id)
+                        ["to_stash", "disabled"].includes(header.column.id)
                           ? "text-center px-2"
                           : ""
                       )}
@@ -594,7 +643,7 @@ export default function RulesTable() {
                   key={row.id}
                   data-state={row.getIsSelected() && "selected"}
                   className={
-                    row.original.dirty ? "bg-yellow-50 hover:bg-yellow-50" : ""
+                    row.original.dirty ? "bg-yellow-50 hover:bg-yellow-50 dark:bg-stone-800 dark:hover:bg-stone-800" : ""
                   }
                 >
                   {row.getVisibleCells().map((cell) => (
@@ -602,7 +651,7 @@ export default function RulesTable() {
                       key={cell.id}
                       className={cn(
                         "py-2 pr-0",
-                        ["to_inbox", "disabled"].includes(cell.column.id)
+                        ["to_stash", "disabled"].includes(cell.column.id)
                           ? "text-center px-0"
                           : ""
                       )}
@@ -628,41 +677,13 @@ export default function RulesTable() {
           </TableBody>
         </TableDiv>
       </div>
-      <div></div>
+      {/* <div className="py-2 font-mono"> */}
+      {/*   #Rules: {data.length} */}
+      {/* </div> */}
     </div>
   )
 }
 
-// A typical debounced input react component
-function DebouncedInput({
-  value: initialValue,
-  onChange,
-  debounce = 200,
-  ...props
-}: {
-  value: string | number
-  onChange: (value: string | number) => void
-  debounce?: number
-} & Omit<React.InputHTMLAttributes<HTMLInputElement>, "onChange">) {
-  const [value, setValue] = useState(initialValue)
-
-  useEffect(() => {
-    setValue(initialValue)
-  }, [initialValue])
-
-  useEffect(() => {
-    const timeout = setTimeout(() => {
-      onChange(value)
-    }, debounce)
-
-    return () => clearTimeout(timeout)
-  }, [value])
-
-  return (
-    <Input
-      {...props}
-      value={value}
-      onChange={(e) => setValue(e.target.value)}
-    />
-  )
+async function getTabList() {
+  const tabs = await browser.tabs.query({})
 }

@@ -39,7 +39,9 @@
     "codemirror-lang-ct": "github:heyppen/codemirror-lang-ct",
     "lucide-react": "^0.456.0",
     "react": "^18.3.1",
+    "react-archer": "^4.4.0",
     "react-dom": "^18.3.1",
+    "react-use-measure": "^2.1.1",
     "tailwind-merge": "^2.5.4",
     "tailwindcss-animate": "^1.0.7"
   },

@@ -1,3 +1,7 @@
-# WXT + React
 
-This template should help get you started developing with React in WXT.
+
+
+<p align="center">
+  <img src="https://github.com/heyppen/CleanTabs/blob/main/public/logo.png?raw=true" alt="Logo" width="128"/>
+  <br /><h1>CleanTabs</h1>
+</p>

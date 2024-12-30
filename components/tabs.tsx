@@ -1,10 +1,10 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { browser, Tabs as TTabs, Windows } from "wxt/browser";
 
-import { Chrome, Earth } from "lucide-react";
 import { ClassValue } from "clsx";
 import { cn } from "@/lib/utils";
 
+import useMeasure, { RectReadOnly } from 'react-use-measure'
 import * as PopoverPrimitive from "@radix-ui/react-popover"
 import {
   Popover,
@@ -55,9 +55,13 @@ async function getAllWindows(): Promise<IWindow[]> {
   return windows;
 }
 
+
+
+
 export function Tabs() {
 
   const [windows, setWindows] = useState<IWindow[]>([])
+  const tabsBounds = useRef(new Map<number, RectReadOnly>());
 
   async function refresh() {
     const wins = await getAllWindows()
@@ -65,10 +69,13 @@ export function Tabs() {
     setWindows(wins)
   }
 
+  function setTabBounds(id: number, rect: RectReadOnly) {
+    tabsBounds.current.set(id, rect)
+  }
+
   useEffect(() => {
     refresh()
   }, [])
-
 
   return <div>
     <div>
@@ -82,21 +89,27 @@ export function Tabs() {
             <div className="flex flex-wrap gap-2">
               {
                 w.tabs.map(t => {
-                  console.log(t.id)
-                  return <TabItem key={t.id} tab={t}></TabItem>
+                  return (
+                    <TabItem key={t.id} tab={t} setTabBounds={setTabBounds}></TabItem>
+                  )
                 })
               }
             </div>
           </div>
         })
       }
-
     </div>
   </div>
 }
 
 
-function TabItem({ tab }: { tab: TTabs.Tab }) {
+function TabItem({
+  tab,
+  setTabBounds,
+}: {
+  tab: TTabs.Tab,
+  setTabBounds: (id: number, rect: RectReadOnly) => void,
+}) {
   let color = 'bg-green-500';
   if (tab.discarded) {
     color = 'bg-neutral-400'
@@ -113,8 +126,16 @@ function TabItem({ tab }: { tab: TTabs.Tab }) {
   }
 
   const [hovering, setHovering] = useState(false);
+  const [ref, bounds] = useMeasure()
 
-  return <div className="">
+  useEffect(() => {
+    console.log(bounds)
+    if (tab.id && bounds) {
+      setTabBounds(tab.id, bounds)
+    }
+  }, [bounds])
+
+  return <div ref={ref} className="">
     <Popover open={hovering}>
       <PopoverTrigger
         onMouseEnter={() => setHovering(true)}
@@ -154,7 +175,7 @@ function Favicon({ tab, className }: { tab: TTabs.Tab, className?: ClassValue })
   const [fallback, setFallback] = useState(tab.favIconUrl === undefined || tab.url?.startsWith("chrome://"))
 
   if (fallback) {
-    return <ChromeIcon className={cn("fill-neutral-400", className)} />
+    return <ChromeIcon className={cn("fill-neutral-600", className)} />
   }
 
   return <img

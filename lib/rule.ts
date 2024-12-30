@@ -1,5 +1,5 @@
 
-import { MatchPattern } from 'wxt/sandbox';
+import { MatchPattern } from './match-pattern';
 
 export interface Rule {
   url_pattern: string;

@@ -12,7 +12,8 @@
     "zip": "wxt zip",
     "zip:firefox": "wxt zip -b firefox",
     "compile": "tsc --noEmit",
-    "postinstall": "wxt prepare"
+    "postinstall": "wxt prepare",
+    "test": "vitest"
   },
   "dependencies": {
     "@codemirror/language": "^6.10.7",
@@ -54,6 +55,7 @@
     "postcss": "^8.4.48",
     "tailwindcss": "^3.4.14",
     "typescript": "^5.6.2",
+    "vitest": "^2.1.8",
     "wxt": "^0.19.22"
   }
 }

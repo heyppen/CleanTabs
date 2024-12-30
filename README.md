@@ -7,3 +7,17 @@
   A browser extension that auto discard (sleep) / close tabs based on rules.
 </p>
 
+
+# About
+
+
+# Rule
+
+## URL Pattern
+
+Examples:
+- `*`: all urls
+- `https://www.google.com*`: all url that starts with `https://www.google.com`
+- `*://*.google.com/*`: `https://docs.google.com/`, `http://mail.google.com/mail/u/0`
+
+## 

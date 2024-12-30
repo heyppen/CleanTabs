@@ -17,8 +17,8 @@ export class MatchPattern {
 
   patternToRegex(p: string): RegExp {
     p = escapeRegex(p)
-    p = p.replaceAll("*", ".*")
-    return new RegExp(p)
+    p = p.replaceAll("\\*", ".*")
+    return new RegExp("^" + p + "$")
   }
 
   /**

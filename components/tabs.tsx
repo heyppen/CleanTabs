@@ -86,7 +86,7 @@ export function Tabs() {
         windows.map((w, i) => {
           return <div key={w.window.id}>
             {i !== 0 && <div className="border-t mt-3 mb-2"></div>}
-            <div className="flex flex-wrap gap-2">
+            <div className="flex flex-wrap gap-1">
               {
                 w.tabs.map(t => {
                   return (
@@ -110,7 +110,7 @@ function TabItem({
   tab: TTabs.Tab,
   setTabBounds: (id: number, rect: RectReadOnly) => void,
 }) {
-  let color = 'bg-green-500';
+  let color = 'bg-green-600';
   if (tab.discarded) {
     color = 'bg-neutral-400'
   }
@@ -143,10 +143,13 @@ function TabItem({
         className="outline-none data-[state=open]:outline-none"
       >
         <div
-          className="flex flex-col items-center justify-center gap-1 cursor-pointer"
+          className={cn(
+            "flex flex-col items-center justify-center gap-1 cursor-pointer px-1 py-1 rounded-[6px]",
+            tab.active ? 'bg-primary/20' : ''
+          )}
           onClick={() => { browser.tabs.update(tab.id!, { active: true }) }}
         >
-          <Favicon tab={tab} className=" h-6 w-6 hover:scale-[115%] duration-200" />
+          <Favicon tab={tab} className=" h-6 w-6 hover:scale-[110%] duration-200" />
           <span className={`w-[5px] h-[5px] ${color} rounded-full`}></span>
         </div >
       </PopoverTrigger>

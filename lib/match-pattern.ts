@@ -29,11 +29,6 @@ export class MatchPattern {
   }
 }
 
-export class InvalidMatchPattern extends Error {
-  constructor(matchPattern: string, reason: string) {
-    super(`Invalid match pattern "${matchPattern}": ${reason}`);
-  }
-}
 
 function escapeRegex(s: string) {
   return s.replace(/[/\-\\^$*+?.()|[\]{}]/g, '\\$&');

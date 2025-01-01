@@ -1,9 +1,10 @@
 
 import { browser, Tabs } from 'wxt/browser'
 import { storage } from 'wxt/storage';
-import { defineBackground, MatchPattern } from 'wxt/sandbox';
+import { defineBackground } from 'wxt/sandbox';
 import { onMessage } from 'webext-bridge/background'
 
+import { MatchPattern } from '@/lib/match-pattern';
 import { Rule, DefaultRules } from '@/lib/rule';
 import { AddToStash, GetSettings, GetRules, SetStash, SetSettings, SetRules, STORAGE_KEY_ENABLED, STORAGE_KEY_STASH, STORAGE_KEY_RULES } from '@/lib/storage';
 import { DefaultStash, StashItem } from '@/lib/stash';

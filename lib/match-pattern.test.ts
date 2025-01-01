@@ -21,10 +21,13 @@ test('protocol=https', () => {
 })
 
 test('host *', () => {
-  const p = new MatchPattern('https://*.google.com')
-  expect(p.includes('https://gmail.google.com')).toBe(true)
-  expect(p.includes('https://docs.google.com')).toBe(true)
-  expect(p.includes('https://docs.google.com/')).toBe(false)
+  const p1 = new MatchPattern('https://*.google.com')
+  expect(p1.includes('https://gmail.google.com')).toBe(true)
+  expect(p1.includes('https://docs.google.com')).toBe(true)
+  expect(p1.includes('https://docs.google.com/')).toBe(false)
+
+  const p2 = new MatchPattern('chrome://*')
+  expect(p2.includes('chrome://version')).toBe(true)
 })
 
 test('path *', () => {

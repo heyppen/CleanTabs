@@ -10,3 +10,11 @@ export function ShortURL(url?: string): string {
   }
   return s
 }
+
+
+export interface Flag {
+  id: number;
+  always_keep?: boolean;
+}
+
+export const DefaultFlags: Flag[] = [];

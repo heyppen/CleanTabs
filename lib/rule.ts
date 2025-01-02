@@ -10,6 +10,7 @@ export interface Rule {
 
   // in-memory only
   dirty?: boolean;
+  index?: number;
 }
 
 export const DefaultRules: Rule[] = [
@@ -43,14 +44,16 @@ export const Actions: Record<Action, ActionAttr> = {
 }
 
 export function FindMatchedRule(rules: Rule[], url: string): Rule | null {
-  for (const rule of rules) {
+  for (let i = 0; i < rules.length; i++) {
+    const rule = rules[i];
+
     if (rule.disabled) {
       continue
     }
 
     const p = new MatchPattern(rule.url_pattern)
     if (p.includes(url)) {
-      return rule
+      return { ...rule, index: i }
     }
   }
   return null

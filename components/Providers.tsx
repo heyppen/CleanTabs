@@ -1,11 +1,12 @@
 import { AppStateSetOptions, DefaultAppState, IAppState } from "@/lib/app-state";
-import { GetStash, GetSettings, GetRules, SetStash, SetSettings, SetRules, STORAGE_KEY_ENABLED } from "@/lib/storage";
+import { GetStash, GetSettings, GetRules, SetStash, SetSettings, SetRules, STORAGE_KEY_ENABLED, GetFlags, SetFlags } from "@/lib/storage";
 import { Rule } from "@/lib/rule";
 import { createContext, useState, ReactNode, useEffect } from "react";
 import { storage } from "wxt/storage";
 import { DefaultStash, Stash } from "@/lib/stash";
 import { DefaultSettings, Settings } from "@/lib/settings";
 import { ThemeProvider } from "./theme-provider";
+import { DefaultFlags, Flag } from "@/lib/tab";
 
 export const AppStateContext = createContext<IAppState>(DefaultAppState);
 
@@ -15,6 +16,7 @@ export function Provider({ children }: { children: ReactNode }) {
   const [settings, _setSettings] = useState<Settings>(DefaultSettings);
   const [rules, _setRules] = useState<Rule[]>([]);
   const [stash, _setStash] = useState<Stash>(DefaultStash);
+  const [flags, _setFlags] = useState<Flag[]>(DefaultFlags);
 
   async function setEnabled(b: boolean) {
     _setEnabled(b)
@@ -42,6 +44,14 @@ export function Provider({ children }: { children: ReactNode }) {
     }
   }
 
+  async function setFlags(flags: Flag[], options?: AppStateSetOptions) {
+    _setFlags(flags)
+    if (options?.toStorage) {
+      await SetFlags(flags)
+    }
+  }
+
+
   useEffect(() => {
     // init states
     (async () => {
@@ -60,6 +70,10 @@ export function Provider({ children }: { children: ReactNode }) {
       const stash = await GetStash()
       console.log(stash)
       _setStash(stash)
+
+      const flags = await GetFlags()
+      console.log(flags)
+      _setFlags(flags)
     })()
   }, [])
 
@@ -72,6 +86,8 @@ export function Provider({ children }: { children: ReactNode }) {
     setRules,
     stash,
     setStash,
+    flags,
+    setFlags,
   }}>
     <ThemeProvider defaultTheme="system">
       {children}

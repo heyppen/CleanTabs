@@ -2,11 +2,13 @@ import { storage } from "wxt/storage";
 import { Rule } from "./rule";
 import { Stash, StashItem } from "./stash";
 import { DefaultSettings, Settings } from "./settings";
+import { DefaultFlags, Flag } from "./tab";
 
 export const STORAGE_KEY_ENABLED = 'local:enabled'
 export const STORAGE_KEY_RULES = 'local:rules'
 export const STORAGE_KEY_STASH = 'local:stash'
 export const STORAGE_KEY_SETTINGS = 'local:settings'
+export const STORAGE_KEY_FLAGS = 'local:flags'
 
 
 export async function GetRules(): Promise<Rule[]> {
@@ -62,4 +64,14 @@ export async function GetSettings(): Promise<Settings> {
 
 export async function SetSettings(settings: Settings) {
   await storage.setItem(STORAGE_KEY_SETTINGS, settings)
+}
+
+
+export async function GetFlags(): Promise<Flag[]> {
+  const flags = await storage.getItem<Flag[]>(STORAGE_KEY_FLAGS) ?? DefaultFlags;
+  return flags
+}
+
+export async function SetFlags(flags: Flag[]) {
+  await storage.setItem(STORAGE_KEY_FLAGS, flags)
 }

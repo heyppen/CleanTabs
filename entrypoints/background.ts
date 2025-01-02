@@ -6,7 +6,7 @@ import { onMessage } from 'webext-bridge/background'
 
 import { MatchPattern } from '@/lib/match-pattern';
 import { Rule, DefaultRules } from '@/lib/rule';
-import { AddToStash, GetSettings, GetRules, SetStash, SetSettings, SetRules, STORAGE_KEY_ENABLED, STORAGE_KEY_STASH, STORAGE_KEY_RULES } from '@/lib/storage';
+import { AddToStash, GetSettings, GetRules, SetStash, SetSettings, SetRules, STORAGE_KEY_ENABLED, STORAGE_KEY_STASH, STORAGE_KEY_RULES, GetFlags, SetFlags } from '@/lib/storage';
 import { DefaultStash, StashItem } from '@/lib/stash';
 import { DefaultSettings } from '@/lib/settings';
 import { NowHuman } from '@/lib/date';
@@ -54,6 +54,8 @@ export default defineBackground(() => {
     //   - find matching rule
     //   - run action
 
+    await clearFlags()
+
     const enabled_ = await enabled()
     if (!enabled_) {
       console.log('Extension disabled, abort...')
@@ -62,6 +64,9 @@ export default defineBackground(() => {
 
     const settings = await GetSettings()
     console.log('settings:', settings)
+
+    const flags = await GetFlags()
+    console.log('flag:', flags)
 
     const rules = await GetRules();
     console.log('rules:', rules)
@@ -83,11 +88,11 @@ export default defineBackground(() => {
         continue
       }
 
-      // if (isNewBlankTab(tab.url)) {
-      //   await tryCloseNewBlankTab(tab)
-      //   continue
-      // }
-
+      const flag = flags.find((f) => f.id === tab.id)
+      if (flag?.always_keep) {
+        console.log('flag always_keep=true, skip...')
+        continue
+      }
 
       const p = findPattern(patterns, url)
       if (!p) {
@@ -112,6 +117,15 @@ export default defineBackground(() => {
     console.log('alarm created already')
   }
 
+  async function clearFlags() {
+    const flags = await GetFlags()
+    console.log('flags before:', flags)
+    const tabs = await browser.tabs.query({})
+    const aliveFlags = flags.filter((f) => !!tabs.find((t) => f.id === t.id))
+    console.log('flags after:', aliveFlags)
+    await SetFlags(aliveFlags)
+  }
+
   interface Pattern {
     index: number;
     rule: Rule;
@@ -129,22 +143,6 @@ export default defineBackground(() => {
       })
     }
     return patterns;
-  }
-
-  function isNewBlankTab(url?: string) {
-    return url === 'chrome://newtab/' || url === 'about:blank'
-  }
-
-  async function tryCloseNewBlankTab(tab: Tabs.Tab) {
-    if (!isNewBlankTab(tab.url)) {
-      return
-    }
-    console.log('closing newtab')
-
-    const settings = await GetSettings();
-    if (settings.CloseBlankNewTab) {
-      await closeTab(tab, { toStash: false })
-    }
   }
 
   async function executeRule(rule: Rule, tab: Tabs.Tab) {

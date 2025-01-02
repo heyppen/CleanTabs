@@ -12,23 +12,6 @@ export function Settings() {
     <h1 className="font-semibold text-base mb-4">Settings</h1>
 
     <div className="px-1 flex flex-col gap-4">
-      <div className="flex items-center gap-2">
-        <Switch
-          id="CloseNewBlankTab"
-          className="w-8 h-4"
-          checked={settings.CloseBlankNewTab}
-          onCheckedChange={(checked) => {
-            setSettings(
-              {
-                ...settings,
-                CloseBlankNewTab: checked,
-              },
-              { toStorage: true }
-            )
-          }}
-        />
-        <Label htmlFor="CloseNewBlankTab">Auto close new tab or blank tab</Label>
-      </div>
 
       <div className="flex items-center gap-2">
         <Switch

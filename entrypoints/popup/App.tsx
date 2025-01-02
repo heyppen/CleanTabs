@@ -14,7 +14,7 @@ import { Settings } from "@/components/settings"
 import { Tabs as TabsComp } from '@/components/tabs'
 import { Button } from "@/components/ui/button"
 
-const TabNames = ["Tabs", "Stash", "Auto Rules"]
+const TabNames = ["Tabs", "Rules", "Stash"]
 
 function App() {
   const { enabled, setEnabled } = useContext(AppStateContext)
@@ -35,12 +35,13 @@ function App() {
               className="w-8 h-4 data-[state=checked]:bg-green-500  dark:data-[state=checked]:bg-green-600 data-[state=unchecked]:dark:bg-zinc-600"
               checked={enabled}
               onCheckedChange={setEnabled}
-              title="Global Switch"
+              title={"Global Switch: " + (enabled ? 'ON' : "OFF")}
             />
             <Button
               variant="ghost"
               size="icon"
               className="w-4 h-4"
+              title="Run rules immediately"
               onClick={
                 async () => {
                   if (running) return;
@@ -73,7 +74,7 @@ function App() {
         <TabsContent value="Tabs" className="p-2 pt-0">
           <TabsComp />
         </TabsContent>
-        <TabsContent value="Auto Rules" className="p-2 pt-0">
+        <TabsContent value="Rules" className="p-2 pt-0">
           <Rules />
         </TabsContent>
         <TabsContent value="Stash" className="p-2 pt-0">

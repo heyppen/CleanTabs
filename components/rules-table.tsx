@@ -683,7 +683,3 @@ export default function RulesTable() {
     </div>
   )
 }
-
-async function getTabList() {
-  const tabs = await browser.tabs.query({})
-}

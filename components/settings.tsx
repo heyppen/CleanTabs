@@ -27,7 +27,7 @@ export function Settings() {
             )
           }}
         />
-        <Label htmlFor="CloseNewBlankTab">Auto close new blank tab</Label>
+        <Label htmlFor="CloseNewBlankTab">Auto close new tab or blank tab</Label>
       </div>
 
       <div className="flex items-center gap-2">

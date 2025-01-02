@@ -13,10 +13,11 @@ export interface Rule {
 }
 
 export const DefaultRules: Rule[] = [
-  { url_pattern: '*://*.google.com/*', inactive_minutes: 1, action: 'discard', disabled: false },
-  { url_pattern: '*://gmail.com/*', inactive_minutes: 3, action: 'discard', disabled: false },
-  { url_pattern: '*://*.youdao.com/*', inactive_minutes: 3, action: 'close', disabled: true },
-  { url_pattern: '*://*/*', inactive_minutes: 3, action: 'discard', disabled: false },
+  { url_pattern: '*://gmail.com/*', inactive_minutes: 1, action: 'nop' },
+  { url_pattern: '*://*.google.com/*', inactive_minutes: 2, action: 'discard' },
+  { url_pattern: 'chrome://newtab/', inactive_minutes: 1, action: 'close' },
+  { url_pattern: 'about:blank', inactive_minutes: 1, action: 'close' },
+  { url_pattern: '*://*/*', inactive_minutes: 10, action: 'discard' },
 ]
 
 export type Action = 'nop' | 'close' | 'discard';
@@ -40,6 +41,21 @@ export const Actions: Record<Action, ActionAttr> = {
     display: 'Close',
   },
 }
+
+export function FindMatchedRule(rules: Rule[], url: string): Rule | null {
+  for (const rule of rules) {
+    if (rule.disabled) {
+      continue
+    }
+
+    const p = new MatchPattern(rule.url_pattern)
+    if (p.includes(url)) {
+      return rule
+    }
+  }
+  return null
+}
+
 
 
 export function Rule2Text(r: Rule): string {
@@ -120,10 +136,10 @@ function v_rule_inactive_minutes(m: number): ValidationResult {
   }
 
   // (1m, 7d)
-  if (m < 1 || m > 7 * 24 * 60) {
+  if (m < 0 || m > 30 * 24 * 60) {
     return {
       ok: false,
-      reason: 'must be [1, 7*24*60]'
+      reason: 'must be [0, 30*24*60]'
     }
   }
 

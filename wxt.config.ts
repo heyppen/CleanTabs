@@ -15,6 +15,15 @@ export default defineConfig({
         resources: ['lib/*'],
         matches: ['<all_urls>']
       }
-    ]
+    ],
+    commands: {
+      _execute_action: {
+        suggested_key: {
+          default: "Alt+T",
+          mac: "MacCtrl+T",
+        },
+        description: "Show the popup"
+      }
+    }
   }
 });

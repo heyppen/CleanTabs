@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { useContext, useEffect, useMemo, useRef, useState } from "react";
 import { browser, Tabs as TTabs, Windows } from "wxt/browser";
 
 import { ClassValue } from "clsx";
@@ -13,7 +13,10 @@ import {
 } from "@/components/ui/popover"
 import { getRelativeTime } from "@/lib/date";
 
-import ChromeIcon from "./chrome-icon";
+import { ChromeBookmarkIcon, ChromeExtensionIcon, ChromeIcon, ChromeSettingsIcon } from "./icons";
+import { AppStateContext } from "./providers";
+import { FindMatchedRule, Rule } from "@/lib/rule";
+import { ShortURL } from "@/lib/tab";
 
 
 interface IWindow {
@@ -110,14 +113,9 @@ function TabItem({
   tab: TTabs.Tab,
   setTabBounds: (id: number, rect: RectReadOnly) => void,
 }) {
-  let color = 'bg-green-600';
+  let color = 'bg-green-500';
   if (tab.discarded) {
     color = 'bg-neutral-400'
-  }
-
-  let origin = tab.url;
-  if (tab.url) {
-    origin = URL.parse(tab.url)?.origin
   }
 
   let lastAccess = null;
@@ -127,6 +125,7 @@ function TabItem({
 
   const [hovering, setHovering] = useState(false);
   const [ref, bounds] = useMeasure()
+  const { rules } = useContext(AppStateContext)
 
   useEffect(() => {
     console.log(bounds)
@@ -134,6 +133,13 @@ function TabItem({
       setTabBounds(tab.id, bounds)
     }
   }, [bounds])
+
+  const matchedRule: Rule | null = useMemo(() => {
+    if (tab.url) {
+      return FindMatchedRule(rules, tab.url)
+    }
+    return null
+  }, [rules, tab])
 
   return <div ref={ref} className="">
     <Popover open={hovering}>
@@ -149,8 +155,8 @@ function TabItem({
           )}
           onClick={() => { browser.tabs.update(tab.id!, { active: true }) }}
         >
-          <Favicon tab={tab} className=" h-6 w-6 hover:scale-[110%] duration-200" />
-          <span className={`w-[5px] h-[5px] ${color} rounded-full`}></span>
+          <Favicon tab={tab} className="h-6 w-6 hover:scale-[110%] duration-200" />
+          <TabStatusIndicator discarded={tab.discarded} />
         </div >
       </PopoverTrigger>
       <PopoverContent
@@ -162,23 +168,49 @@ function TabItem({
       >
         <PopoverPrimitive.Arrow className="fill-neutral-400" />
         <p className="font-semibold text-[13px] leading-relaxed">{tab.title}</p>
-        <p className="leading-relaxed text-neutral-600">{origin}</p>
+        <p className="leading-relaxed text-neutral-600">{ShortURL(tab.url)}</p>
         <div className="border-t my-2"></div>
         <div className="font-mono flex justify-between">
-          <span>status: {tab.discarded ? 'discarded' : 'normal'}</span>
+          <div className="flex items-center gap-1">
+            <span>
+              status: {tab.discarded ? 'discarded' : 'normal'}
+            </span>
+            <TabStatusIndicator discarded={tab.discarded} />
+          </div>
           <span>last access: {lastAccess}</span>
         </div>
+        {
+          matchedRule && <div className="flex justify-end font-mono">
+            <span>inactive {matchedRule.inactive_minutes} minutes to {matchedRule.action}</span>
+          </div>
+        }
       </PopoverContent>
     </Popover>
   </div>
 }
 
+const ChromeDefaultBlue = '#3871e0';
 
 function Favicon({ tab, className }: { tab: TTabs.Tab, className?: ClassValue }) {
+  if (tab.url?.startsWith('chrome://settings/')) {
+    return <ChromeSettingsIcon fill={ChromeDefaultBlue} className={cn(className)} />
+  }
+
+  if (tab.url === 'chrome://extensions/') {
+    return <ChromeExtensionIcon fill={ChromeDefaultBlue} className={cn(className)} />
+  }
+
+  if (tab.url === 'chrome://bookmarks/') {
+    return <ChromeBookmarkIcon fill={ChromeDefaultBlue} className={cn(className)} />
+  }
+
+
   const [fallback, setFallback] = useState(tab.favIconUrl === undefined || tab.url?.startsWith("chrome://"))
 
   if (fallback) {
-    return <ChromeIcon className={cn("fill-neutral-600", className)} />
+    return <div className={cn(className, 'flex items-center justify-center')}>
+      <ChromeIcon fill={ChromeDefaultBlue} className="w-5 h-5" />
+    </div>
   }
 
   return <img
@@ -188,3 +220,10 @@ function Favicon({ tab, className }: { tab: TTabs.Tab, className?: ClassValue })
   />
 }
 
+function TabStatusIndicator({ discarded }: { discarded?: boolean }) {
+  let color = 'bg-green-500';
+  if (discarded) {
+    color = 'bg-neutral-400'
+  }
+  return <span className={`w-[5px] h-[5px] ${color} rounded-full`}></span>
+}

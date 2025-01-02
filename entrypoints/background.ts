@@ -83,10 +83,10 @@ export default defineBackground(() => {
         continue
       }
 
-      if (isNewBlankTab(tab.url)) {
-        await tryCloseNewBlankTab(tab)
-        continue
-      }
+      // if (isNewBlankTab(tab.url)) {
+      //   await tryCloseNewBlankTab(tab)
+      //   continue
+      // }
 
 
       const p = findPattern(patterns, url)
@@ -132,7 +132,7 @@ export default defineBackground(() => {
   }
 
   function isNewBlankTab(url?: string) {
-    return url === 'chrome://newtab/'
+    return url === 'chrome://newtab/' || url === 'about:blank'
   }
 
   async function tryCloseNewBlankTab(tab: Tabs.Tab) {

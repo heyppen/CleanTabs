@@ -22,14 +22,14 @@ function App() {
   const [running, setRunning] = useState(false);
 
   return (
-    <div className="min-w-[800px] min-h-[400px] w-full h-full flex ">
+    <div className="min-w-[800px] min-h-[400px] w-full h-full flex">
       {/* <img src={logo} /> */}
       <Tabs defaultValue={TabNames[0]} className="w-full h-full">
         <TabsList className="w-full flex justify-between border-b border-neutral-300 dark:border-neutral-700 shadow-sm">
           <div className="flex gap-4 items-center px-3 text-foreground">
-            <div className="h-10 font-mono flex items-center gap-2">
+            <div className="h-10 flex items-center gap-2">
               <img src={logo} className="w-5 h-5 relative bottom-[1px]" />
-              <span className="">CleanTabs v1.0</span>
+              <span className="tracking-wide font-medium text-sm">CleanTabs</span>
             </div>
             <Switch
               className="w-8 h-4 data-[state=checked]:bg-green-500  dark:data-[state=checked]:bg-green-600 data-[state=unchecked]:dark:bg-zinc-600"
@@ -64,7 +64,7 @@ function App() {
                 {t}
               </TabsTrigger>
             ))}
-            <TabsTrigger value="Options" className="h-7 ml-12 px-2 py-0 rounded-full data-[state=active]:shadow-none data-[state=active]:bg-transparent">
+            <TabsTrigger value="Settings" className="h-7 ml-12 px-2 py-0 rounded-full data-[state=active]:shadow-none data-[state=active]:bg-transparent">
               <SettingsIcon className="w-4 h-4" />
             </TabsTrigger>
           </div>
@@ -80,7 +80,7 @@ function App() {
         <TabsContent value="Stash" className="p-2 pt-0">
           <Stash />
         </TabsContent>
-        <TabsContent value="Options" className="p-2 pt-0">
+        <TabsContent value="Settings" className="">
           <Settings />
         </TabsContent>
       </Tabs>

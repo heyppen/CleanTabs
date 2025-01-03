@@ -4,19 +4,13 @@ import { browser, Tabs as TTabs, Windows } from "wxt/browser";
 import { ClassValue } from "clsx";
 import { cn } from "@/lib/utils";
 
-import useMeasure, { RectReadOnly } from 'react-use-measure'
+// import useMeasure, { RectReadOnly } from 'react-use-measure'
 import * as PopoverPrimitive from "@radix-ui/react-popover"
 import {
   Popover,
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover"
-import {
-  ContextMenu,
-  ContextMenuContent,
-  ContextMenuItem,
-  ContextMenuTrigger,
-} from "@/components/ui/context-menu"
 import { getRelativeTime } from "@/lib/date";
 
 import { ChromeBookmarkIcon, ChromeExtensionIcon, ChromeIcon, ChromeSettingsIcon } from "./icons";
@@ -73,7 +67,7 @@ export function Tabs() {
 
   const [hoverTabId, setHoverTabId] = useState<number | undefined>(undefined);
   const [windows, setWindows] = useState<IWindow[]>([])
-  const tabsBounds = useRef(new Map<number, RectReadOnly>());
+  // const tabsBounds = useRef(new Map<number, RectReadOnly>());
   const { flags, setFlags } = useContext(AppStateContext)
 
   async function refresh() {
@@ -94,9 +88,9 @@ export function Tabs() {
     }
   }
 
-  function setTabBounds(id: number, rect: RectReadOnly) {
-    tabsBounds.current.set(id, rect)
-  }
+  // function setTabBounds(id: number, rect: RectReadOnly) {
+  //   tabsBounds.current.set(id, rect)
+  // }
 
   useEffect(() => {
     refresh()
@@ -119,7 +113,6 @@ export function Tabs() {
                     <TabItem
                       key={t.id}
                       tab={t}
-                      setTabBounds={setTabBounds}
                       hoverTabId={hoverTabId}
                       setHoverTabId={setHoverTabId}
                       flag={flag}
@@ -139,14 +132,14 @@ export function Tabs() {
 
 function TabItem({
   tab,
-  setTabBounds,
+  // setTabBounds,
   hoverTabId,
   setHoverTabId,
   flag,
   upsertFlag,
 }: {
   tab: TTabs.Tab,
-  setTabBounds: (id: number, rect: RectReadOnly) => void,
+  // setTabBounds?: (id: number, rect: RectReadOnly) => void,
   hoverTabId?: number,
   setHoverTabId: (id?: number) => void,
   flag?: Flag,
@@ -164,16 +157,16 @@ function TabItem({
 
   const [hovering, setHovering] = useState(false);
   const [contentHovering, setContentHovering] = useState(false);
-  const [ref, bounds] = useMeasure()
+  // const [ref, bounds] = useMeasure()
   const { rules } = useContext(AppStateContext)
 
   const popoverOpen = tab.id === hoverTabId && (hovering || contentHovering)
 
-  useEffect(() => {
-    if (tab.id && bounds) {
-      setTabBounds(tab.id, bounds)
-    }
-  }, [bounds])
+  // useEffect(() => {
+  //   if (tab.id && bounds) {
+  //     setTabBounds(tab.id, bounds)
+  //   }
+  // }, [bounds])
 
   const matchedRule: Rule | null = useMemo(() => {
     if (tab.url) {
@@ -183,7 +176,7 @@ function TabItem({
   }, [rules, tab])
 
 
-  return <div ref={ref} className="">
+  return <div>
     <Popover open={popoverOpen}>
       <PopoverTrigger
         onMouseEnter={() => {

@@ -30,7 +30,7 @@ If
 > These tabs will not be discarded or closed:
 > - focused tab in every window
 > - pinned or grouped tabs if disabled in settings
-> - excluded manually
+> - tabs excluded manually
 
 
 # Rule

@@ -7,13 +7,15 @@
   A browser extension that auto discard / close tabs based on rules.
 </p>
 
+<!--todo: add image-->
+
 # About
 
 **CleanTabs** discards (sleep) / closes tabs, **based on rules**, **automatically in the background**.
 
 # Installation
 
-todo
+<!--todo: add badge-->
 
 # How CleanTabs works?
 

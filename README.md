@@ -13,6 +13,8 @@
 
 # Installation
 
+todo
+
 # How CleanTabs works?
 
 At every minute, **CleanTabs** will iterate over all tabs of all windows: 
@@ -62,6 +64,4 @@ Examples:
 
 # Development
 
-Check [WXT Extension FrameWork](https://wxt.dev/).
-
-PRs or issues are welcome!
+Check [WXT Extension FrameWork](https://wxt.dev/). PRs or issues are welcome!

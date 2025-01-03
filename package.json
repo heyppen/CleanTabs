@@ -1,6 +1,6 @@
 {
-  "name": "wxt-react-starter",
-  "description": "manifest.json description",
+  "name": "CleanTabs",
+  "description": "A browser extension that auto discard (sleep) / close tabs based on rules.",
   "private": true,
   "version": "0.1.0",
   "type": "module",

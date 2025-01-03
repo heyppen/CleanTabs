@@ -22,11 +22,14 @@ If
 - leaving duration exceeds `<Inactive minutes>`
 - not `Disabeld`
 
-**CleanTabs** will perform `<Action>` on this tab, but except:
+**CleanTabs** will perform `<Action>` on this tab.
 
-- focused tab in every window
-- pinned or grouped tabs if disabled in settings
-- excluded manually
+> [!NOTE]
+> These tabs will not be discarded or closed:
+> - focused tab in every window
+> - pinned or grouped tabs if disabled in settings
+> - excluded manually
+
 
 # Rule
 

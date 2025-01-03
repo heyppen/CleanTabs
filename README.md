@@ -19,7 +19,7 @@ At every minute, **CleanTabs** will iterate over all tabs of all windows:
 
 If 
 - `tab.url` matches `<URL Pattern>`
-- leave duration exceeds `<Inactive minutes>`
+- leaving duration exceeds `<Inactive minutes>`
 - not `Disabeld`
 
 **CleanTabs** will perform `<Action>` on this tab, but except:
@@ -57,3 +57,8 @@ Examples:
 - `Discard`: Discards a tab from memory. Discarded tabs are still visible on the tab strip and are reloaded when activated. See [Chrome Doc](https://developer.chrome.com/docs/extensions/reference/api/tabs#method-discard).
 - `Close`: Just close. If  `→Stash` enabled, this tab will be saved in Stash.
 
+# Development
+
+Check [WXT Extension FrameWork](https://wxt.dev/).
+
+PRs or issues are welcome!

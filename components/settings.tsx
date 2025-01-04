@@ -63,13 +63,14 @@ export function Settings() {
           href="https://github.com/heyppen/CleanTabs"
           title="https://github.com/heyppen/CleanTabs"
           target="_blank"
-          className="text-blue-600 hover:underline flex items-center gap-1 "
+          className="flex items-center"
         >
           <GitHub className="inline-block w-5 h-5" />
         </a>
         <a
-          href="#"
-          title="#"
+          href="https://chromewebstore.google.com/detail/cleantabs/dhafadjcaeeklhlbbfeomgdgpkafdmig"
+          title="Chrome Web Store Link"
+          target="_blank"
         >
           <ChromeStore className="w-6 h-6" />
         </a>

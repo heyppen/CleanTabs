@@ -14,6 +14,8 @@ import {
   SortingState,
   getSortedRowModel,
 } from "@tanstack/react-table"
+import { onMessage } from 'webext-bridge/popup'
+
 
 import {
   Table as TableDiv,
@@ -62,8 +64,10 @@ export function Stash() {
   useEffect(() => {
     refresh();
 
-    const interval = setInterval(refresh, 3000)
-    return () => clearInterval(interval)
+    onMessage('cron:done', () => {
+      console.log('cron:done')
+      refresh()
+    })
   }, [])
 
 

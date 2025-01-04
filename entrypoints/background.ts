@@ -2,7 +2,7 @@
 import { browser, Tabs } from 'wxt/browser'
 import { storage } from 'wxt/storage';
 import { defineBackground } from 'wxt/sandbox';
-import { onMessage } from 'webext-bridge/background'
+import { sendMessage, onMessage } from 'webext-bridge/background'
 
 import { MatchPattern } from '@/lib/match-pattern';
 import { Rule, DefaultRules } from '@/lib/rule';
@@ -104,6 +104,8 @@ export default defineBackground(() => {
       // execute matching rule
       await executeRule(p.rule, tab)
     }
+
+    sendMessage('cron:done', {}, 'popup')
   }
 
   async function checkAlarmState() {

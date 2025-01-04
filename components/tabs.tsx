@@ -1,5 +1,6 @@
 import { useContext, useEffect, useMemo, useRef, useState } from "react";
 import { browser, Tabs as TTabs, Windows } from "wxt/browser";
+import { onMessage } from 'webext-bridge/popup'
 
 import { ClassValue } from "clsx";
 import { cn } from "@/lib/utils";
@@ -94,6 +95,10 @@ export function Tabs() {
 
   useEffect(() => {
     refresh()
+    onMessage('cron:done', () => {
+      console.log('cron:done')
+      refresh()
+    })
   }, [])
 
   return <div>

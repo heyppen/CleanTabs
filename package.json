@@ -1,8 +1,8 @@
 {
   "name": "CleanTabs",
-  "description": "A browser extension that auto discard (sleep) / close tabs based on rules.",
+  "description": "Auto discard (sleep) / close tabs based on rules.",
   "private": true,
-  "version": "0.1.0",
+  "version": "1.0.0",
   "type": "module",
   "scripts": {
     "dev": "wxt",

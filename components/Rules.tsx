@@ -31,7 +31,7 @@ export default function Rules() {
               tab === 'table' ? <div className="text-sm leading-7 tracking-wide">
                 <h1 className="font-bold text-base mb-2">Rule</h1>
                 <ul className="list-disc list-inside">
-                  <li>URL Pattern: <a className="text-blue-500 underline" href="https://wxt.dev/api/reference/wxt/sandbox/classes/MatchPattern.html" target="_blank">reference</a></li>
+                  <li>URL Pattern: <a className="text-blue-500 underline" href="https://github.com/heyppen/CleanTabs?tab=readme-ov-file#url-pattern" target="_blank">reference</a></li>
                   <li>Inactive: after leaving [0, 30*24*60] (minutes)</li>
                   <li>Action: discard from memory (still visible)</li>
                   <li>→Inbox: works only if action is close</li>
@@ -39,7 +39,7 @@ export default function Rules() {
               </div> : <div className="text-sm leading-7 tracking-wide">
                 <h1 className="font-bold text-base mb-2">Rule</h1>
                 <ul className="list-disc list-inside">
-                  <li>URL Pattern: <a className="text-blue-500 underline" href="https://wxt.dev/api/reference/wxt/sandbox/classes/MatchPattern.html" target="_blank">reference</a></li>
+                  <li>URL Pattern: <a className="text-blue-500 underline" href="https://github.com/heyppen/CleanTabs?tab=readme-ov-file#url-pattern" target="_blank">reference</a></li>
                   <li>Inactive: after leaving [0, 30*24*60] (minutes)</li>
                   <li>Action: discard from memory (still visible)</li>
                   <li>→Inbox, Disabed can be omitted</li>

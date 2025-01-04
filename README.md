@@ -3,9 +3,10 @@
   <br />
   <h1 align="center">CleanTabs</h1>
 </p>
-<p align="center">
-  A browser extension that auto discard / close tabs based on rules.
-</p>
+<div align="center">
+  <p>A browser extension that auto discard / close tabs based on rules.</p>
+  <img alt="Chrome Web Store Version" src="https://img.shields.io/chrome-web-store/v/dhafadjcaeeklhlbbfeomgdgpkafdmig?style=for-the-badge">
+</div>
 
 <!--todo: add image-->
 
@@ -14,8 +15,12 @@
 **CleanTabs** discards (sleep) / closes tabs, **based on rules**, **automatically in the background**.
 
 # Installation
-
 <!--todo: add badge-->
+<a 
+  href="https://chromewebstore.google.com/detail/cleantabs/dhafadjcaeeklhlbbfeomgdgpkafdmig"
+>
+  <img src="https://github.com/heyppen/CleanTabs/blob/main/doc/chrome-web-store-badge.png?raw=true" alt="Chrome Web Store Badge" />
+</a>
 
 # How CleanTabs works?
 

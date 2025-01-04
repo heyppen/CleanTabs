@@ -16,15 +16,11 @@
 
 # Installation
 <!--todo: add badge-->
-<a 
-  href="https://chromewebstore.google.com/detail/cleantabs/dhafadjcaeeklhlbbfeomgdgpkafdmig"
->
-  <img src="https://github.com/heyppen/CleanTabs/blob/main/doc/chrome-web-store-badge.png?raw=true" alt="Chrome Web Store Badge" />
-</a>
+<a href="https://chromewebstore.google.com/detail/cleantabs/dhafadjcaeeklhlbbfeomgdgpkafdmig" target="_blank"><img src="https://github.com/heyppen/CleanTabs/blob/main/doc/chrome-web-store-badge.png?raw=true" alt="Chrome Web Store Badge" height="60px"/></a>
 
 # How CleanTabs works?
 
-At every minute, **CleanTabs** will iterate over all tabs of all windows: 
+At every minute, **CleanTabs** will iterate over all tabs of all windows:
 
 If 
 - `tab.url` matches `<URL Pattern>`

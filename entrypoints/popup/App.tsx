@@ -22,11 +22,11 @@ function App() {
   const [running, setRunning] = useState(false);
 
   return (
-    <div className="min-w-[800px] min-h-[400px] w-full h-full flex">
+    <div className="min-w-[800px] min-h-[400px] w-full h-full flex ">
       {/* <img src={logo} /> */}
       <Tabs defaultValue={TabNames[0]} className="w-full h-full">
-        <TabsList className="w-full flex justify-between border-b border-neutral-300 dark:border-neutral-700 shadow-sm">
-          <div className="flex gap-4 items-center px-3 text-foreground">
+        <TabsList className="w-full flex justify-between bg-white dark:bg-neutral-900/40 dark:text-neutral-100 border-b border-neutral-300 dark:border-neutral-700 shadow-sm">
+          <div className="flex gap-4 items-center px-3 ">
             <div className="h-10 flex items-center gap-2">
               <img src={logo} className="w-5 h-5 relative bottom-[1px]" />
               <span className="tracking-wide font-medium text-sm">CleanTabs</span>
@@ -60,7 +60,7 @@ function App() {
 
           <div className="rounded-none shadow-none px-2 flex items-center">
             {TabNames.map((t) => (
-              <TabsTrigger key={t} value={t} className="h-7 px-4 py-0 rounded-full data-[state=active]:shadow">
+              <TabsTrigger key={t} value={t} className="h-6 mx-4 px-0  data-[state=active]:shadow-none border-b-[2px] border-transparent data-[state=active]:border-primary data-[state=active]:bg-transparent">
                 {t}
               </TabsTrigger>
             ))}

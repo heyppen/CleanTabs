@@ -63,6 +63,30 @@ Examples:
 - `Discard`: Discards a tab from memory. Discarded tabs are still visible on the tab strip and are reloaded when activated. See [Chrome Doc](https://developer.chrome.com/docs/extensions/reference/api/tabs#method-discard).
 - `Close`: Just close. If  `→Stash` enabled, this tab will be saved in Stash.
 
+# Recommended rules
+
+> [!TIP]
+> Copy these rules to `Rules` -> `Code mode`
+
+## Gentle mode
+
+Discards or close the websites listed in the rules only, the others will not be touched.
+```
+*://www.google.com/*, 5, discard
+*://stackoverflow.com/*, 10, close, true
+chrome://newtab/, 1, close
+about:blank, 1, close
+```
+
+## Aggressive mode
+
+By default, CleanTabs can close any websites, except those marked as `NOP`.
+```
+*://mail.google.com/*, 1, nop
+*://www.youtube.com/*, 1, nop
+*, 15, close, true
+```
+
 # Development
 
 Check [WXT Extension FrameWork](https://wxt.dev/). PRs or issues are welcome!

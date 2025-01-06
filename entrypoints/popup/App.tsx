@@ -13,6 +13,7 @@ import logo from "/logo.png"
 import { Settings } from "@/components/settings"
 import { Tabs as TabsComp } from '@/components/tabs'
 import { Button } from "@/components/ui/button"
+import { ChromeSettingsIcon } from "@/components/icons"
 
 const TabNames = ["Tabs", "Rules", "Stash"]
 
@@ -25,7 +26,7 @@ function App() {
     <div className="min-w-[800px] min-h-[400px] w-full h-full flex ">
       {/* <img src={logo} /> */}
       <Tabs defaultValue={TabNames[0]} className="w-full h-full">
-        <TabsList className="w-full flex justify-between bg-white dark:bg-neutral-900/40 dark:text-neutral-100 border-b border-neutral-300 dark:border-neutral-700 shadow-sm">
+        <TabsList className="w-full flex justify-between bg-white dark:bg-neutral-900/40 text-neutral-700 dark:text-neutral-100 border-b border-neutral-300 dark:border-neutral-700 shadow-sm">
           <div className="flex gap-4 items-center px-3 ">
             <div className="h-10 flex items-center gap-2">
               <img src={logo} className="w-5 h-5 relative bottom-[1px]" />
@@ -64,8 +65,8 @@ function App() {
                 {t}
               </TabsTrigger>
             ))}
-            <TabsTrigger value="Settings" className="h-7 ml-12 px-2 py-0 rounded-full data-[state=active]:shadow-none data-[state=active]:bg-transparent">
-              <SettingsIcon className="w-4 h-4" />
+            <TabsTrigger value="Settings" className="h-7 ml-12 px-2 py-0 rounded-full data-[state=active]:shadow-none data-[state=active]:bg-transparent data-[state=active]:fill-primary">
+              <ChromeSettingsIcon className="w-4 h-4" />
             </TabsTrigger>
           </div>
 

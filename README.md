@@ -8,9 +8,7 @@
   <a href="https://chromewebstore.google.com/detail/cleantabs/dhafadjcaeeklhlbbfeomgdgpkafdmig" target="_blank"><img alt="Chrome Web Store Version" src="https://img.shields.io/chrome-web-store/v/dhafadjcaeeklhlbbfeomgdgpkafdmig?color=green"></a>
 </div>
 
-# CleanTabs
-
-*CleanTabs* discards (sleep) / closes tabs, **based on rules**, **automatically in the background**.
+![shot-rules.png](https://github.com/heyppen/CleanTabs/blob/main/doc/shot-rules.png?raw=true)
 
 # Installation
 

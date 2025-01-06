@@ -19,11 +19,12 @@
 At every minute, **CleanTabs** will iterate over all tabs of all windows:
 
 If 
-- `tab.url` matches `<URL Pattern>`
-- leaving duration exceeds `<Inactive minutes>`
 - not `Disabeld`
+- `tab.url` matches `<URL Pattern>`
 
-**CleanTabs** will perform `<Action>` on this tab.
+**CleanTabs** will
+- perform `<Action>` on this tab if leaving duration exceeds `<Inactive minutes>`
+- process the next tab
 
 > [!NOTE]
 > These tabs will not be discarded or closed:

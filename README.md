@@ -80,11 +80,11 @@ about:blank, 1, close
 
 ## Aggressive mode
 
-By default, CleanTabs can close any websites, except those marked as `NOP`.
+By default, CleanTabs will discard / close any websites, except those marked as `NOP`.
 ```
 *://mail.google.com/*, 1, nop
 *://www.youtube.com/*, 1, nop
-*, 15, close, true
+*, 15, discard, true
 ```
 
 # Development

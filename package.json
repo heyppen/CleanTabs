@@ -2,7 +2,7 @@
   "name": "CleanTabs",
   "description": "Auto discard (sleep) / close tabs based on rules.",
   "private": true,
-  "version": "1.0.1",
+  "version": "1.0.2",
   "type": "module",
   "scripts": {
     "dev": "wxt",

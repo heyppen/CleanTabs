@@ -14,11 +14,9 @@ export interface Rule {
 }
 
 export const DefaultRules: Rule[] = [
-  { url_pattern: '*://gmail.com/*', inactive_minutes: 1, action: 'nop' },
-  { url_pattern: '*://*.google.com/*', inactive_minutes: 2, action: 'discard' },
-  { url_pattern: 'chrome://newtab/', inactive_minutes: 1, action: 'close' },
-  { url_pattern: 'about:blank', inactive_minutes: 1, action: 'close' },
-  { url_pattern: '*://*/*', inactive_minutes: 10, action: 'discard' },
+  { url_pattern: '*://mail.google.com/*', inactive_minutes: 1, action: 'nop' },
+  { url_pattern: '*://www.youtube.com/*', inactive_minutes: 1, action: 'nop' },
+  { url_pattern: '*', inactive_minutes: 15, action: 'discard' },
 ]
 
 export type Action = 'nop' | 'close' | 'discard';

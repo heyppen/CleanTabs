@@ -4,11 +4,15 @@
   <h1 align="center">CleanTabs</h1>
 </p>
 <div align="center">
-  <p>A browser extension that auto discard / close tabs based on rules.</p>
+  <p>A browser extension that auto discard / close tabs based on customizable rules.</p>
   <a href="https://chromewebstore.google.com/detail/cleantabs/dhafadjcaeeklhlbbfeomgdgpkafdmig" target="_blank"><img alt="Chrome Web Store Version" src="https://img.shields.io/chrome-web-store/v/dhafadjcaeeklhlbbfeomgdgpkafdmig?color=green"></a>
 </div>
 
 ![shot-rules.png](https://github.com/heyppen/CleanTabs/blob/main/doc/shot-rules.png?raw=true)
+
+# CleanTabs
+
+CleanTabs  auto discards (sleep) / closes tabs in the background, **based on customizable rules**. Its goal is to reduce browser memory usage and address the clutter caused by having too many open tabs.
 
 # Installation
 

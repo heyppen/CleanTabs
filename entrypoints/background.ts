@@ -5,10 +5,9 @@ import { defineBackground } from 'wxt/sandbox';
 import { sendMessage, onMessage } from 'webext-bridge/background'
 
 import { MatchPattern } from '@/lib/match-pattern';
-import { Rule, DefaultRules } from '@/lib/rule';
-import { AddToStash, GetSettings, GetRules, SetStash, SetSettings, SetRules, STORAGE_KEY_ENABLED, STORAGE_KEY_STASH, STORAGE_KEY_RULES, GetFlags, SetFlags } from '@/lib/storage';
-import { DefaultStash, StashItem } from '@/lib/stash';
-import { DefaultSettings } from '@/lib/settings';
+import { Rule } from '@/lib/rule';
+import { AddToStash, GetSettings, GetRules, STORAGE_KEY_ENABLED, GetFlags, SetFlags, InitStorage } from '@/lib/storage';
+import { StashItem } from '@/lib/stash';
 import { NowHuman } from '@/lib/date';
 
 export default defineBackground(() => {
@@ -37,12 +36,7 @@ export default defineBackground(() => {
   })
 
   async function onInstall() {
-    // init storage
-    console.log('init storage')
-    await storage.setItem(STORAGE_KEY_ENABLED, true)
-    await SetSettings(DefaultSettings)
-    await SetRules(DefaultRules)
-    await SetStash(DefaultStash)
+    await InitStorage()
 
     if (import.meta.env.MODE === 'development') {
       cron();

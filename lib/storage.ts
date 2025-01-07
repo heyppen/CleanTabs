@@ -1,15 +1,33 @@
 import { storage } from "wxt/storage";
-import { Rule } from "./rule";
-import { Stash, StashItem } from "./stash";
+import { DefaultRules, Rule } from "./rule";
+import { DefaultStash, Stash, StashItem } from "./stash";
 import { DefaultSettings, Settings } from "./settings";
 import { DefaultFlags, Flag } from "./tab";
 
+const STORAGE_KEY_INIT = 'local:init'
 export const STORAGE_KEY_ENABLED = 'local:enabled'
 export const STORAGE_KEY_RULES = 'local:rules'
 export const STORAGE_KEY_STASH = 'local:stash'
 export const STORAGE_KEY_SETTINGS = 'local:settings'
 export const STORAGE_KEY_FLAGS = 'local:flags'
 
+
+
+export async function InitStorage() {
+  const init = await storage.getItem<boolean>(STORAGE_KEY_INIT) ?? false;
+  if (init) {
+    console.log('storage init=true')
+    return
+  }
+
+  console.log('init storage')
+  await storage.setItem(STORAGE_KEY_ENABLED, true)
+  await SetSettings(DefaultSettings)
+  await SetRules(DefaultRules)
+  await SetStash(DefaultStash)
+
+  await storage.setItem(STORAGE_KEY_INIT, true)
+}
 
 export async function GetRules(): Promise<Rule[]> {
   const rules: Rule[] = await storage.getItem<Rule[]>(STORAGE_KEY_RULES) ?? []

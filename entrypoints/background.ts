@@ -38,6 +38,7 @@ export default defineBackground(() => {
 
   async function onInstall() {
     // init storage
+    console.log('init storage')
     await storage.setItem(STORAGE_KEY_ENABLED, true)
     await SetSettings(DefaultSettings)
     await SetRules(DefaultRules)

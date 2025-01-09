@@ -6,9 +6,9 @@
 <div align="center">
   <p>A browser extension that auto discard / close tabs based on customizable rules.</p>
   <p>
-    <a href="https://chromewebstore.google.com/detail/cleantabs/dhafadjcaeeklhlbbfeomgdgpkafdmig" target="_blank"><img alt="Chrome Web Store Version" src="https://img.shields.io/chrome-web-store/v/dhafadjcaeeklhlbbfeomgdgpkafdmig?color=green"></a>
-    <a href="https://discord.gg/NY8B8YcE" target="_blank"><img alt="Discord invite link" src="https://img.shields.io/badge/chat-Discord-blue?logo=discord" /></a>
-    <a href="https://x.com/ppen_cc" target="_blank"><img alt="Discord invite link" src="https://img.shields.io/twitter/follow/ppen_cc" /></a>
+    <a href="https://chromewebstore.google.com/detail/cleantabs/dhafadjcaeeklhlbbfeomgdgpkafdmig" target="_blank"><img alt="Chrome Web Store Version" src="https://img.shields.io/chrome-web-store/v/dhafadjcaeeklhlbbfeomgdgpkafdmig?style=flat-square&color=green"></a>
+    <a href="https://discord.gg/NY8B8YcE" target="_blank"><img alt="Discord invite link" src="https://img.shields.io/badge/chat-Discord-blue?style=flat-square&logo=discord" /></a>
+    <a href="https://x.com/ppen_cc" target="_blank"><img alt="Discord invite link" src="https://img.shields.io/badge/follow-Twitter-blue?style=flat-square&logo=x" /></a>
   </p>
 </div>
 

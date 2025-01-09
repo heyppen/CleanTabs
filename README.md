@@ -5,7 +5,11 @@
 </p>
 <div align="center">
   <p>A browser extension that auto discard / close tabs based on customizable rules.</p>
-  <a href="https://chromewebstore.google.com/detail/cleantabs/dhafadjcaeeklhlbbfeomgdgpkafdmig" target="_blank"><img alt="Chrome Web Store Version" src="https://img.shields.io/chrome-web-store/v/dhafadjcaeeklhlbbfeomgdgpkafdmig?color=green"></a>
+  <p>
+    <a href="https://chromewebstore.google.com/detail/cleantabs/dhafadjcaeeklhlbbfeomgdgpkafdmig" target="_blank"><img alt="Chrome Web Store Version" src="https://img.shields.io/chrome-web-store/v/dhafadjcaeeklhlbbfeomgdgpkafdmig?color=green"></a>
+    <a href="https://discord.gg/NY8B8YcE" target="_blank"><img alt="Discord invite link" src="https://img.shields.io/badge/chat-Discord-blue?logo=discord" /></a>
+    <a href="https://x.com/ppen_cc" target="_blank"><img alt="Discord invite link" src="https://img.shields.io/twitter/follow/ppen_cc" /></a>
+  </p>
 </div>
 
 ![shot-rules.png](https://github.com/heyppen/CleanTabs/blob/main/doc/shot-rules.png?raw=true)
